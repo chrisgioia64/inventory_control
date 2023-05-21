@@ -1,5 +1,7 @@
 package distribution;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -18,6 +20,25 @@ public class DiscreteDistribution implements I_Distribution {
 
     private double mean;
 
+    private double mean_squared;
+
+    private double standard_deviation;
+
+    public DiscreteDistribution(List<Integer> events) {
+        this(getProbMap(events));
+    }
+
+    public static Map<Integer, Double> getProbMap(List<Integer> events) {
+        Map<Integer, Double> map = new HashMap<>();
+        for (Integer event : events) {
+            map.put(event, map.getOrDefault(event, 0.0) + 1.0);
+        }
+        for (Map.Entry<Integer, Double> entry : map.entrySet()) {
+            map.put(entry.getKey(), entry.getValue() / (events.size()));
+        }
+        return map;
+    }
+
     public DiscreteDistribution(Map<Integer, Double> probMap) {
         this.lowerBound = Integer.MAX_VALUE;
         this.upperBound = Integer.MIN_VALUE;
@@ -30,6 +51,7 @@ public class DiscreteDistribution implements I_Distribution {
         this.pdfs = new double[upperBound - lowerBound + 1];
         this.cdfs = new double[upperBound - lowerBound + 1];
         this.mean = 0;
+        this.mean_squared = 0;
         for (Map.Entry<Integer, Double> entry : probMap.entrySet()) {
             int k = entry.getKey();
             int index = k - lowerBound;
@@ -40,8 +62,10 @@ public class DiscreteDistribution implements I_Distribution {
                 cdfs[index] = pdfs[index];
             }
             mean += k * pdfs[index];
+            mean_squared += k * k * pdfs[index];
         }
         mean = mean / normalizationConstant;
+        standard_deviation = Math.sqrt(mean_squared - mean * mean);
     }
 
     @Override
@@ -82,6 +106,11 @@ public class DiscreteDistribution implements I_Distribution {
     @Override
     public double getMean() {
         return mean;
+    }
+
+    @Override
+    public double getStandardDeviation() {
+        return standard_deviation;
     }
 
     @Override

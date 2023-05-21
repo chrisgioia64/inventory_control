@@ -14,4 +14,6 @@ public interface I_Distribution {
 
     double getMean();
 
+    double getStandardDeviation();
+
 }

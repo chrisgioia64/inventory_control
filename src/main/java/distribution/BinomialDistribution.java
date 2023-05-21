@@ -86,4 +86,9 @@ public class BinomialDistribution implements I_Distribution {
     public double getMean() {
         return n * p;
     }
+
+    @Override
+    public double getStandardDeviation() {
+        return Math.sqrt(n * p * (1 - p));
+    }
 }

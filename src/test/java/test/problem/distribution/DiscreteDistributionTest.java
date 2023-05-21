@@ -4,9 +4,13 @@ import org.testng.annotations.Test;
 import distribution.DiscreteDistribution;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
+import static org.testng.Assert.assertTrue;
 import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertFalse;
 
 public class DiscreteDistributionTest {
 
@@ -62,6 +66,43 @@ public class DiscreteDistributionTest {
         assertEquals(0.9, dist.getProbabilityBetween(1, 4), 1e-2);
         assertEquals(1.0, dist.getProbabilityBetween(1, 6), 1e-2);
         assertEquals(0.0, dist.getProbabilityBetween(7, 9), 1e-2);
+    }
+
+    @Test
+    public void test4() {
+        List<Integer> events = new LinkedList<>();
+        events.add(3);
+        events.add(4);
+        events.add(7);
+        events.add(3);
+        events.add(7);
+        Map<Integer, Double> probMap = DiscreteDistribution.getProbMap(events);
+        assertEquals(3, probMap.size());
+        assertFalse(probMap.containsKey(0));
+        assertFalse(probMap.containsKey(1));
+        assertTrue(probMap.containsKey(3));
+        assertTrue(probMap.containsKey(4));
+        assertTrue(probMap.containsKey(7));
+        assertEquals(0.4, probMap.get(3), 1e-3);
+        assertEquals(0.2, probMap.get(4), 1e-3);
+        assertEquals(0.4, probMap.get(7), 1e-3);
+    }
+
+    @Test
+    public void test5() {
+        List<Integer> events = new LinkedList<>();
+        events.add(1);
+        events.add(3);
+        events.add(4);
+        events.add(4);
+        events.add(5);
+        events.add(5);
+        events.add(6);
+        events.add(6);
+        events.add(7);
+        events.add(9);
+        DiscreteDistribution dist = new DiscreteDistribution(events);
+        assertEquals(2.1, dist.getStandardDeviation(), 1e-2);
     }
 
 }

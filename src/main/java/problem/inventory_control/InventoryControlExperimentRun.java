@@ -27,8 +27,9 @@ public class InventoryControlExperimentRun {
         for (int i = 0; i < experiment.getN(); i++) {
             uValues[i] = control.orderAmount(experiment, i, xValues[i]);
             wValues[i] = experiment.getDemandProcess().sampleAt(i);
-            xValues[i+1] = xValues[i] + uValues[i] - wValues[i];
-            penalties[i] = experiment.getPenalty().cost(xValues[i]);
+            int nextValue = xValues[i] + uValues[i] - wValues[i];
+            xValues[i+1] = Math.max(experiment.getMinStock(), nextValue);
+            penalties[i] = experiment.getPenalty().cost(nextValue);
         }
         finalPenalty = experiment.getFinalPenalty().cost(xValues[experiment.getN()]);
     }
