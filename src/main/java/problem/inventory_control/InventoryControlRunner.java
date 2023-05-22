@@ -33,7 +33,7 @@ public class InventoryControlRunner {
                 .finalPenalty(finalPenalty)
                 .build();
         InventoryControlMeanReplenisher controlLaw = new InventoryControlMeanReplenisher();
-        InventoryControlExperimentRun run = new InventoryControlExperimentRun(experiment, controlLaw);
+        InventoryControlExperimentRun run = null;
 
         List<Integer> events = new LinkedList<>();
         for (int i = 0; i < 10; i++) {
@@ -44,8 +44,8 @@ public class InventoryControlRunner {
             events.add((int)run.getTotalPenalty());
         }
         DiscreteDistribution dist = new DiscreteDistribution(events);
-//        System.out.println("Mean: " + dist.getMean());
-//        System.out.println("Standard Dev: " + dist.getStandardDeviation());
+        System.out.println("Mean: " + dist.getMean());
+        System.out.println("Standard Dev: " + dist.getStandardDeviation());
 
         InventoryControlDP dp = new InventoryControlDP(experiment);
         dp.solve();

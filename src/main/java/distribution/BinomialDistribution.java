@@ -4,14 +4,14 @@ import java.util.Random;
 
 public class BinomialDistribution implements I_Distribution {
 
-    private int n;
-    private double p;
+    private final int n;
+    private final double p;
 
-    private Random random;
+    private final Random random;
 
-    private double[] pdfs;
+    private final double[] pdfs;
 
-    private double[] cdfs;
+    private final double[] cdfs;
 
     public BinomialDistribution(int n, double p) {
         this.n = n;

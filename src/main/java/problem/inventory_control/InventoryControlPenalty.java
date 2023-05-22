@@ -6,6 +6,6 @@ package problem.inventory_control;
 @FunctionalInterface
 public interface InventoryControlPenalty {
 
-    public int cost(int x_k, int u_k);
+    int cost(int x_k, int u_k);
 
 }

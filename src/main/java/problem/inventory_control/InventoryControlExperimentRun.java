@@ -2,8 +2,8 @@ package problem.inventory_control;
 
 public class InventoryControlExperimentRun {
 
-    private InventoryControlExperiment experiment;
-    private InventoryControlLaw control;
+    private final InventoryControlExperiment experiment;
+    private final InventoryControlLaw control;
 
     public InventoryControlExperimentRun(InventoryControlExperiment experiment,
                                          InventoryControlLaw control) {
@@ -16,10 +16,10 @@ public class InventoryControlExperimentRun {
         this.penalties = new double[N+1];
     }
 
-    private int[] xValues;
-    private int[] wValues;
-    private int[] uValues;
-    private double[] penalties;
+    private final int[] xValues;
+    private final int[] wValues;
+    private final int[] uValues;
+    private final double[] penalties;
     private double finalPenalty;
 
     public void runExperiment() {
@@ -46,6 +46,7 @@ public class InventoryControlExperimentRun {
             b.append(String.format("%-2.3f", penalties[i]));
             System.out.println(b.toString());
         }
+        System.out.println("Final penalty: " + finalPenalty);
     }
 
     public double getTotalPenalty() {

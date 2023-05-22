@@ -4,17 +4,17 @@ import process.DemandProcess;
 
 public class InventoryControlDP {
 
-    private InventoryControlExperiment experiment;
+    private final InventoryControlExperiment experiment;
 
-    private Control[][] dpTable;
+    private final Control[][] dpTable;
 
-    private int N;
+    private final int N;
 
-    private int numStates;
+    private final int numStates;
 
     private static class Control {
-        private int u;
-        private double expectedCost;
+        private final int u;
+        private final double expectedCost;
 
         public Control(int u, double expectedCost) {
             this.u = u;

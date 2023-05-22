@@ -11,8 +11,8 @@ public class DiscreteDistribution implements I_Distribution {
     private int upperBound;
 
     /** Unnormalized probabilities. */
-    private double[] pdfs;
-    private double[] cdfs;
+    private final double[] pdfs;
+    private final double[] cdfs;
 
     private double normalizationConstant;
 
@@ -22,7 +22,7 @@ public class DiscreteDistribution implements I_Distribution {
 
     private double mean_squared;
 
-    private double standard_deviation;
+    private final double standard_deviation;
 
     public DiscreteDistribution(List<Integer> events) {
         this(getProbMap(events));
