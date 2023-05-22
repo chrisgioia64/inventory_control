@@ -32,7 +32,7 @@ public class InventoryControlDP {
             System.out.println("--- " + i + " ---");
             for (int j = 0; j < numStates; j++) {
                 int state = j + experiment.getMinStock();
-                System.out.println(String.format("%-4d -> %s", state, dpTable[i][j]));
+                System.out.printf("%-4d -> %s%n", state, dpTable[i][j]);
             }
             System.out.println();
             System.out.println();

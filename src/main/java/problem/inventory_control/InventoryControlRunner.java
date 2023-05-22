@@ -19,9 +19,7 @@ public class InventoryControlRunner {
                 return cost + x_k * x_k;
             }
         };
-        InventoryControlFinalPenalty finalPenalty = (int x) -> {
-            return Math.abs(x) * Math.abs(x);
-        };
+        InventoryControlFinalPenalty finalPenalty = (int x) -> Math.abs(x) * Math.abs(x);
 
         InventoryControlExperiment experiment = InventoryControlExperiment.builder()
                 .N(5)
@@ -33,11 +31,10 @@ public class InventoryControlRunner {
                 .finalPenalty(finalPenalty)
                 .build();
         InventoryControlMeanReplenisher controlLaw = new InventoryControlMeanReplenisher();
-        InventoryControlExperimentRun run = null;
 
         List<Integer> events = new LinkedList<>();
         for (int i = 0; i < 10; i++) {
-            run = new InventoryControlExperimentRun(experiment, controlLaw);
+            InventoryControlExperimentRun run = new InventoryControlExperimentRun(experiment, controlLaw);
             run.runExperiment();
 //            run.printResults();
             System.out.println(run.getTotalPenalty());

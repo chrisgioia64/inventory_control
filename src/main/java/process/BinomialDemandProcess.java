@@ -5,7 +5,7 @@ import process.DemandProcess;
 
 public class BinomialDemandProcess implements DemandProcess {
 
-    private BinomialDistribution distribution;
+    private final BinomialDistribution distribution;
 
     public BinomialDemandProcess(int n, double p) {
         this.distribution = new BinomialDistribution(n, p);

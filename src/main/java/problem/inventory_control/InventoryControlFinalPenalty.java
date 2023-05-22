@@ -5,6 +5,6 @@ package problem.inventory_control;
  */
 public interface InventoryControlFinalPenalty {
 
-    public int cost(int stockAmount);
+    int cost(int stockAmount);
 
 }

@@ -24,11 +24,10 @@ public class InventoryControlExperimentRun {
 
     public void runExperiment() {
         xValues[0] = experiment.getStartStock();
-        int nextValue = -1;
         for (int i = 0; i < experiment.getN(); i++) {
             uValues[i] = control.orderAmount(experiment, i, xValues[i]);
             wValues[i] = experiment.getDemandProcess().sampleAt(i);
-            nextValue = xValues[i] + uValues[i] - wValues[i];
+            int nextValue = xValues[i] + uValues[i] - wValues[i];
             xValues[i+1] = Math.max(experiment.getMinStock(), nextValue);
             penalties[i] = experiment.getPenalty().cost(nextValue, uValues[i]);
         }
@@ -44,7 +43,7 @@ public class InventoryControlExperimentRun {
             b.append(String.format("%-5d", uValues[i]));
             b.append(String.format("%-5d", wValues[i]));
             b.append(String.format("%-2.3f", penalties[i]));
-            System.out.println(b.toString());
+            System.out.println(b);
         }
         System.out.println("Final penalty: " + finalPenalty);
     }

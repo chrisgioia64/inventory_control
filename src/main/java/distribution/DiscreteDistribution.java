@@ -14,13 +14,10 @@ public class DiscreteDistribution implements I_Distribution {
     private final double[] pdfs;
     private final double[] cdfs;
 
+    private final Random random;
     private double normalizationConstant;
 
-    private Random random;
-
     private double mean;
-
-    private double mean_squared;
 
     private final double standard_deviation;
 
@@ -43,6 +40,7 @@ public class DiscreteDistribution implements I_Distribution {
         this.lowerBound = Integer.MAX_VALUE;
         this.upperBound = Integer.MIN_VALUE;
         this.normalizationConstant = 0;
+        this.random = new Random();
         for (Map.Entry<Integer, Double> entry : probMap.entrySet()) {
             lowerBound = Math.min(lowerBound, entry.getKey());
             upperBound = Math.max(upperBound, entry.getKey());
@@ -51,7 +49,7 @@ public class DiscreteDistribution implements I_Distribution {
         this.pdfs = new double[upperBound - lowerBound + 1];
         this.cdfs = new double[upperBound - lowerBound + 1];
         this.mean = 0;
-        this.mean_squared = 0;
+        double mean_squared = 0;
         for (Map.Entry<Integer, Double> entry : probMap.entrySet()) {
             int k = entry.getKey();
             int index = k - lowerBound;

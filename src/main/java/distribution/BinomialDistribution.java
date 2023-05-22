@@ -35,10 +35,6 @@ public class BinomialDistribution implements I_Distribution {
         return n;
     }
 
-    public double getP() {
-        return p;
-    }
-
     @Override
     public double getProbabilityAt(int k) {
         if (k >= 0 && k <= n) {
