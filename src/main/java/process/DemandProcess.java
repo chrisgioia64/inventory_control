@@ -7,7 +7,7 @@ public interface DemandProcess {
     int getUpperBound(int k);
 
     /**
-     * Returns the probability of getting demand r at time period k
+     * Returns the probability of getting demand k at time period r
      */
     double getProbability(int k, int r);
 
