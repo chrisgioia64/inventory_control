@@ -24,18 +24,21 @@ public class InventoryControlExperimentRun {
 
     public void runExperiment() {
         xValues[0] = experiment.getStartStock();
+        int nextValue = -1;
         for (int i = 0; i < experiment.getN(); i++) {
             uValues[i] = control.orderAmount(experiment, i, xValues[i]);
             wValues[i] = experiment.getDemandProcess().sampleAt(i);
-            int nextValue = xValues[i] + uValues[i] - wValues[i];
-            xValues[i+1] = Math.max(experiment.getMinStock(), nextValue);
+            nextValue = xValues[i] + uValues[i] - wValues[i];
+            xValues[i+1] = Math.min(experiment.getMaxStock(),
+                    Math.max(experiment.getMinStock(), nextValue));
             penalties[i] = experiment.getPenalty().cost(nextValue, uValues[i]);
         }
-        finalPenalty = experiment.getFinalPenalty().cost(xValues[experiment.getN()]);
+        finalPenalty = experiment.getFinalPenalty().cost(nextValue);
     }
 
     public void printResults() {
         System.out.println("i    x    u    w");
+        double sumPenalty = 0;
         for (int i = 0; i < experiment.getN(); i++) {
             StringBuilder b = new StringBuilder();
             b.append(String.format("%-5d", i));
@@ -43,9 +46,12 @@ public class InventoryControlExperimentRun {
             b.append(String.format("%-5d", uValues[i]));
             b.append(String.format("%-5d", wValues[i]));
             b.append(String.format("%-2.3f", penalties[i]));
+            sumPenalty += penalties[i];
             System.out.println(b);
         }
+        sumPenalty += finalPenalty;
         System.out.println("Final penalty: " + finalPenalty);
+        System.out.println("Total penalty: " + sumPenalty);
     }
 
     public double getTotalPenalty() {
@@ -53,7 +59,7 @@ public class InventoryControlExperimentRun {
         for (int i = 0; i < experiment.getN(); i++) {
             totalPenalty += penalties[i];
         }
-        return totalPenalty;
+        return totalPenalty + finalPenalty;
     }
 
 }

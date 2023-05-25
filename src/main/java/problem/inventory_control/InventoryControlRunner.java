@@ -12,7 +12,7 @@ public class InventoryControlRunner {
     public static void main(String[] args) {
         DemandProcess process = new BinomialDemandProcess(10, 0.4);
         InventoryControlPenalty penalty = (int x_k, int u_k) -> {
-            int cost = 2 * u_k;
+            int cost = u_k;
             if (x_k > 0) {
                 return cost + x_k;
             } else {
@@ -36,7 +36,7 @@ public class InventoryControlRunner {
         for (int i = 0; i < 10; i++) {
             InventoryControlExperimentRun run = new InventoryControlExperimentRun(experiment, controlLaw);
             run.runExperiment();
-//            run.printResults();
+            run.printResults();
             System.out.println(run.getTotalPenalty());
             events.add((int)run.getTotalPenalty());
         }

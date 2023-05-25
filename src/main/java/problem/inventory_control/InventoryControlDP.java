@@ -60,6 +60,8 @@ public class InventoryControlDP {
                 int upper_control = experiment.getMaxStock() - x_k;
                 double minCostSoFar = Integer.MAX_VALUE;
                 int bestControlSoFar = -1;
+//                System.out.println("--------------------");
+//                System.out.println("period: " + period + ", x_k: " + x_k);
                 for (int u = low_control; u <= upper_control; u++) {
                     DemandProcess process = experiment.getDemandProcess();
                     int low_w = process.getLowerBound(i);
@@ -68,12 +70,15 @@ public class InventoryControlDP {
                     for (int w = low_w; w <= upper_w; w++) {
                         double prob = process.getProbability(w, i);
                         double cost = penalty.cost(x_k + u - w, u);
-                        int nextState = Math.max(x_k, experiment.getMinStock());
+                        int nextState = Math.max(x_k + u - w, experiment.getMinStock());
                         nextState = Math.min(nextState, experiment.getMaxStock());
                         int nextStateIndex = nextState - experiment.getMinStock();
                         double nextStateCost = dpTable[period+1][nextStateIndex].expectedCost;
                         expected_cost += prob * (cost + nextStateCost);
+//                        System.out.println("      w: " + w + ", prob: " + prob + ", " +
+//                                " cost: " + cost + " , next state cost: " + nextStateCost);
                     }
+//                    System.out.println("   u: " + u + ", expected cost: " + expected_cost);
                     if (expected_cost < minCostSoFar) {
                         bestControlSoFar = u;
                         minCostSoFar = expected_cost;
