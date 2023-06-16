@@ -1,11 +1,12 @@
 package problem.inventory_control;
 
 import lombok.Builder;
+import problem.Experiment;
 import process.DemandProcess;
 
 
 @Builder
-public class InventoryControlExperiment {
+public class InventoryControlExperiment implements Experiment {
 
     /** Number of periods. */
     private int N;

@@ -1,10 +1,9 @@
 package problem.inventory_control;
 
+import problem.DynamicProgramSolver;
 import process.DemandProcess;
 
-public class InventoryControlDP {
-
-    private final InventoryControlExperiment experiment;
+public class InventoryControlDP extends DynamicProgramSolver<InventoryControlExperiment> {
 
     private final Control[][] dpTable;
 
@@ -40,7 +39,7 @@ public class InventoryControlDP {
     }
 
     public InventoryControlDP(InventoryControlExperiment experiment) {
-        this.experiment = experiment;
+        super(experiment);
         this.N = experiment.getN();
         this.numStates = experiment.getMaxStock() - experiment.getMinStock() + 1;
         this.dpTable = new Control[N+1][numStates];
@@ -60,8 +59,6 @@ public class InventoryControlDP {
                 int upper_control = experiment.getMaxStock() - x_k;
                 double minCostSoFar = Integer.MAX_VALUE;
                 int bestControlSoFar = -1;
-//                System.out.println("--------------------");
-//                System.out.println("period: " + period + ", x_k: " + x_k);
                 for (int u = low_control; u <= upper_control; u++) {
                     DemandProcess process = experiment.getDemandProcess();
                     int low_w = process.getLowerBound(i);
@@ -75,10 +72,7 @@ public class InventoryControlDP {
                         int nextStateIndex = nextState - experiment.getMinStock();
                         double nextStateCost = dpTable[period+1][nextStateIndex].expectedCost;
                         expected_cost += prob * (cost + nextStateCost);
-//                        System.out.println("      w: " + w + ", prob: " + prob + ", " +
-//                                " cost: " + cost + " , next state cost: " + nextStateCost);
                     }
-//                    System.out.println("   u: " + u + ", expected cost: " + expected_cost);
                     if (expected_cost < minCostSoFar) {
                         bestControlSoFar = u;
                         minCostSoFar = expected_cost;
