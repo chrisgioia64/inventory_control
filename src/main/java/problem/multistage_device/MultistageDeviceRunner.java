@@ -9,6 +9,9 @@ public class MultistageDeviceRunner {
         MultistageDeviceDP dp = new MultistageDeviceDP(data, 100);
         dp.solve();
         dp.printTable();
+
+        MultistageDeviceDataSelection selecton = dp.getSelection(10);
+        System.out.println(selecton);
     }
 
 }

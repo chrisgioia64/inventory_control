@@ -2,29 +2,53 @@ package problem.multistage_device;
 
 import problem.DynamicProgramSolver;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 public class MultistageDeviceDP extends DynamicProgramSolver<MultistageDeviceData> {
 
-    private class Control {
-        private double nll;
-        private int quantity;
-
-        public Control(double nll, int quantity) {
-            this.nll = nll;
-            this.quantity = quantity;
-        }
-        @Override
-        public String toString() {
-            return nll + " : " + quantity;
-        }
-    }
-
-    private Control[][] dpTable;
+    private MultistageControl[][] dpTable;
     private int totalCost;
 
     public MultistageDeviceDP(MultistageDeviceData experiment, int totalCost) {
         super(experiment);
         this.totalCost = totalCost;
-        this.dpTable = new Control[experiment.getDevices().size()][totalCost+1];
+        this.dpTable = new MultistageControl[experiment.getDevices().size()][totalCost+1];
+    }
+
+    public MultistageControl[][] getDpTable() {
+        return dpTable;
+    }
+
+    public MultistageDeviceDataSelection getSelection(int totalCost) {
+        LinkedList<MultistageDeviceDataSelection.DeviceSelection> devices = new LinkedList<>();
+        int currentCost = totalCost;
+
+        for (int i = dpTable.length - 1; i >= 0; i--) {
+            MultistageDeviceData.SingleStageInformation singleStage = experiment.getDevices().get(i);
+            MultistageDeviceDataSelection.DeviceSelection device = new MultistageDeviceDataSelection.DeviceSelection();
+            device.setNumCost(singleStage.getUnitCost());
+            List<MultistageDeviceDataSelection.ItemSelection> items = new LinkedList<>();
+            int idx = 0;
+            double[] probs = singleStage.getProbabilities();
+            MultistageControl control = dpTable[i][currentCost];
+            for (int j = 1; j < probs.length; j++) {
+                MultistageDeviceDataSelection.ItemSelection item = new MultistageDeviceDataSelection.ItemSelection();
+                item.setProbability(probs[j]);
+                if (control.quantity == j) {
+                    item.setSelected(true);
+                }
+                items.add(item);
+            }
+            currentCost = currentCost - (control.quantity - 1) * singleStage.getUnitCost();
+            device.setItems(items);
+            devices.addFirst(device);
+        }
+        double totalProb = Math.exp(dpTable[dpTable.length-1][totalCost].nll);
+        MultistageDeviceDataSelection obj = new MultistageDeviceDataSelection(devices,
+                totalProb);
+        return obj;
     }
 
     public void printTable() {
@@ -45,15 +69,16 @@ public class MultistageDeviceDP extends DynamicProgramSolver<MultistageDeviceDat
         for (int i = 1; i < device.getProbabilities().length; i++) {
             double nll = Math.log(device.getProbabilities()[i]);
             for (int j = (i - 1) * cost; j <= Math.min(i * cost, totalCost); j++) {
-                dpTable[0][j] = new Control(nll, 0);
+                dpTable[0][j] = new MultistageControl(nll, i);
             }
         }
         int start = (device.getProbabilities().length - 1) * cost;
+        int numDevices = device.getProbabilities().length - 1;
         if (start < dpTable[0].length) {
             double nll = dpTable[0][start-1].nll;
             int j = start;
             while (j <= totalCost) {
-                dpTable[0][j] = new Control(nll, 0);
+                dpTable[0][j] = new MultistageControl(nll, numDevices);
                 j++;
             }
         }
@@ -79,7 +104,7 @@ public class MultistageDeviceDP extends DynamicProgramSolver<MultistageDeviceDat
                         break;
                     }
                 }
-                dpTable[i][j] = new Control(NLLBestSoFar, soldBestSoFar);
+                dpTable[i][j] = new MultistageControl(NLLBestSoFar, soldBestSoFar);
             }
         }
     }
